@@ -3,11 +3,10 @@ package main
 import "net/http"
 
 func (app *application) routes() *http.ServeMux {
-	var cfg1 config
 
 	mux := http.NewServeMux()
 
-	fileServer := http.FileServer(http.Dir(cfg1.staticDir))
+	fileServer := http.FileServer(http.Dir(app.staticDir))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	mux.HandleFunc("/", app.home)

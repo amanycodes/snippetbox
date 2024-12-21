@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -18,9 +19,11 @@ type config struct {
 }
 
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	snippets *models.SnipptModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	snippets      *models.SnipptModel
+	staticDir     string
+	templateCache map[string]*template.Template
 }
 
 func OpenDB(dsn string) (*sql.DB, error) {
@@ -49,10 +52,17 @@ func main() {
 
 	defer db.Close()
 
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		snippets: &models.SnipptModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		snippets:      &models.SnipptModel{DB: db},
+		staticDir:     cfg.staticDir,
+		templateCache: templateCache,
 	}
 
 	srv := &http.Server{
