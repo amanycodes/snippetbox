@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/amanycodes/snippetbox/internal/models"
+	"github.com/go-playground/form/v4"
 	_ "github.com/go-sql-driver/mysql" // New import
 )
 
@@ -24,6 +25,7 @@ type application struct {
 	snippets      *models.SnipptModel
 	staticDir     string
 	templateCache map[string]*template.Template
+	formDecoder   *form.Decoder
 }
 
 func OpenDB(dsn string) (*sql.DB, error) {
@@ -57,12 +59,15 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	formDecoder := form.NewDecoder()
+
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		snippets:      &models.SnipptModel{DB: db},
 		staticDir:     cfg.staticDir,
 		templateCache: templateCache,
+		formDecoder:   formDecoder,
 	}
 
 	srv := &http.Server{
