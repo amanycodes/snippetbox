@@ -27,6 +27,7 @@ type application struct {
 	errorLog       *log.Logger
 	infoLog        *log.Logger
 	snippets       *models.SnipptModel
+	users          *models.UserModel
 	staticDir      string
 	templateCache  map[string]*template.Template
 	formDecoder    *form.Decoder
@@ -75,6 +76,7 @@ func main() {
 		errorLog:       errorLog,
 		infoLog:        infoLog,
 		snippets:       &models.SnipptModel{DB: db},
+		users:          &models.UserModel{DB: db},
 		staticDir:      cfg.staticDir,
 		templateCache:  templateCache,
 		formDecoder:    formDecoder,
