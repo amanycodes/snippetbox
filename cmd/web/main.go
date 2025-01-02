@@ -26,8 +26,8 @@ type config struct {
 type application struct {
 	errorLog       *log.Logger
 	infoLog        *log.Logger
-	snippets       *models.SnipptModel
-	users          *models.UserModel
+	snippets       models.SnippetModelInterface
+	users          models.UserModelInterface
 	staticDir      string
 	templateCache  map[string]*template.Template
 	formDecoder    *form.Decoder
